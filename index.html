@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='utf-8' />
+        <title>Rendition of MapBox GL</title>
+        <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+        <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.1/mapbox-gl.js'></script>
+        <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.1/mapbox-gl.css' rel='stylesheet' />
+        <style>
+        body { margin:0; padding:0; }
+        #map { position:absolute; top:0; bottom:0; width:100%; }
+        #menu {
+            position: absolute;
+            z-index:1;
+            background: #fff;
+            padding: 5px;
+            font-family: 'Open Sans', sans-serif;
+            top: 10px;
+            right: 50px;
+            }
+        .geocoder {
+            position:absolute;
+            z-index:1;
+            width:50%;
+            left:50%;
+            margin-left:-25%;
+            top:20px;
+            }
+        .mapboxgl-ctrl-geocoder { min-width:100%; }
+    </style>
+    </head>
+    <body>
+        <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v3.1.6/mapbox-gl-geocoder.min.js'></script>
+        <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v3.1.6/mapbox-gl-geocoder.css' type='text/css' />
+    
+        <div id='map'></div>
+        <div id='geocoder'></div>
+        <div id='menu'>
+            <input id='streets-v11' type='radio' name='rtoggle' value='streets' checked='checked'>
+            <label for='streets'>streets</label>
+            <input id='light-v10' type='radio' name='rtoggle' value='light'>
+            <label for='light'>light</label>
+            <input id='dark-v10' type='radio' name='rtoggle' value='dark'>
+            <label for='dark'>dark</label>
+            <input id='outdoors-v11' type='radio' name='rtoggle' value='outdoors'>
+            <label for='outdoors'>outdoors</label>
+            <input id='satellite-v9' type='radio' name='rtoggle' value='satellite'>
+            <label for='satellite'>satellite</label>
+        </div>
+    <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiaW10aWF6c3llZCIsImEiOiJjanRmaHdjNjQwNDNkNDNwamc3eW9qY3RmIn0.XQWfguRjCDq5SThEckoXHQ';
+    var map = new mapboxgl.Map({
+    container: 'map', // container id
+    style: 'mapbox://styles/mapbox/streets-v11',
+    center: [-74.50, 40], // starting position
+    zoom: 9 // starting zoom
+    });
+    // Add zoom and rotation controls to the map.
+    map.addControl(new mapboxgl.NavigationControl());
+
+    var layerList = document.getElementById('menu');
+    var inputs = layerList.getElementsByTagName('input');
+    var geocoder = new MapboxGeocoder({
+        accessToken: mapboxgl.accessToken
+    });
+        
+    document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
+    
+    for (var i = 0; i < inputs.length; i++) {
+    inputs[i].onclick = switchLayer;
+    }
+
+    function switchLayer(layer) {
+    var layerId = layer.target.id;
+    map.setStyle('mapbox://styles/mapbox/' + layerId);
+    }
+        
+    </script>
+    </body>
+</html>
